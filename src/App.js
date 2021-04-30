@@ -1,56 +1,20 @@
-import './App.css';
-import restaurant from './restaurant.jpg';
+import React from 'react';
+import "./App.css";
 
-function Header(props) {
-  return (
-    <header>
-      <h1>{props.name}'s Kitchen</h1>
-    </header>
-  );
+function SecretComponent() {
+  return <h1>Secret information for authorized users only</h1>
 }
 
-function Main(props) {
-  return (
-    <section>
-      <p>We serve the most delicious food around.</p>
-      <img src={restaurant} alt='Restaurant'/>
-      <ul>
-        {props.dishes.map(dish => <li key={dish.id}>{dish.title}</li>)}
-      </ul>
-    </section>
-  );
+function RegularComponent() {
+  return <h1>Everyone can see this component</h1>
 }
 
-function Footer() {
+function App({authorized}) {
   return (
-    <footer>
-      <p>It's true.</p>
-    </footer>
-  );
-}
-
-const dishes = [
-  'Macaroni and Cheese',
-  'Salmon',
-  'Tofu with vegetables',
-  'Minestrone',
-];
-
-const dishesObj = dishes.map((dish, index) => {
-  return {
-    id: index,
-    title: dish,
-  }
-})
-
-function App() {
-  return (
-    <div className="App">
-      <Header name="Tsimafei"/>
-      <Main dishes={dishesObj}/>
-      <Footer/>
-    </div>
-  );
+    <>
+      {authorized ? <SecretComponent /> : <RegularComponent />}
+    </>
+  )
 }
 
 export default App;
