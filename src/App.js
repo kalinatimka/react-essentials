@@ -1,23 +1,40 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 
-// https://api.github.com/users/kalinatimka
 function App({nickname}) {
   const [data, setData] = useState(null);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(null);
 
   useEffect(() => {
-    fetch(`https://api.github.com/users/${nickname}`).then(res => {
-      return res.json();
-    }).then(setData);
+    if (!nickname) {
+      return;
+    }
+    setLoading(true);
+    fetch(`https://api.github.com/users/${nickname}`)
+      .then(res => res.json())
+      .then(setData)
+      .then(() => {
+        setLoading(false);
+      })
+      .catch(setError);
   }, [nickname]);
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
+  if (error) {
+    return <pre>{JSON.stringify(error, null, 2)}</pre>
+  }
 
   if (data) {
     return (
-    <div>
-      <h1>{data.name}</h1>
-      <p>{data.location}</p>
-      <img alt={data.login} src={data.avatar_url}/>
-    </div>
+      <>
+        <h1>{data.name}</h1>
+        <p>{data.location}</p>
+        <img alt={data.login} src={data.avatar_url}/>
+      </>
     )
   }
 
